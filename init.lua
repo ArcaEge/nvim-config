@@ -105,9 +105,30 @@ require("lualine").setup()
 require("ibl").setup()
 require('gitsigns').setup()
 require("neo-tree").setup({
+    close_if_last_window = true,
     window = {
         width = 30,
-    }
+        mappings = {
+            ["o"] = "system_open",
+        },
+    },
+    filesystem = {
+        filtered_items = {
+            visible = true,
+            hide_dotfiles = false,
+            hide_gitignored = false,
+        }
+    },
+    commands = {
+        system_open = function(state)
+            local node = state.tree:get_node()
+            local path = node:get_id()
+            -- macOs: open file in default application in the background.
+            vim.fn.jobstart({ "xdg-open", "-g", path }, { detach = true })
+            -- Linux: open file in default application
+            vim.fn.jobstart({ "xdg-open", path }, { detach = true })
+        end,
+    },
 })
 require('neoscroll').setup({
     easing_function = "quadratic"
@@ -129,5 +150,6 @@ vim.api.nvim_create_autocmd({ "ColorScheme" }, {
 	end
 })
 
+vim.cmd("Neotree action=close")
 
 require("arca")
