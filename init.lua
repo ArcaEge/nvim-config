@@ -107,14 +107,19 @@ require("lazy").setup({
             insert_at_start = true,
         },
     },
+    { 'RaafatTurki/hex.nvim' },
+
+    'tpope/vim-commentary',
 })
 
+require ('hex').setup()
 require('nvim-autopairs').setup()
 require("dressing").setup()
 require("scrollbar").setup()
 require("lualine").setup()
 require("ibl").setup()
 require('gitsigns').setup()
+
 require("neo-tree").setup({
     close_if_last_window = true,
     window = {
@@ -139,6 +144,17 @@ require("neo-tree").setup({
             -- Linux: open file in default application
             vim.fn.jobstart({ "xdg-open", path }, { detach = true })
         end,
+    },
+    event_handlers = {
+        {
+            event = "file_opened",
+            handler = function(file_path)
+                -- auto close
+                -- vimc.cmd("Neotree close")
+                -- OR
+                require("neo-tree.command").execute({ action = "close" })
+            end
+        },
     },
 })
 require('neoscroll').setup({
