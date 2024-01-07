@@ -80,6 +80,7 @@ require("lazy").setup({
 	{'hrsh7th/cmp-nvim-lsp'},
 	{'hrsh7th/nvim-cmp'},
 	{'L3MON4D3/LuaSnip'},
+    'terrortylor/nvim-comment',
 
     -- GitSigns
     "lewis6991/gitsigns.nvim",
@@ -110,9 +111,19 @@ require("lazy").setup({
     { 'RaafatTurki/hex.nvim' },
 
     'tpope/vim-commentary',
+
+    {
+        "folke/trouble.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        opts = {
+            -- your configuration comes here
+            -- or leave it empty to use the default settings
+            -- refer to the configuration section below
+        },
+    },
 })
 
-require ('hex').setup()
+require('hex').setup()
 require('nvim-autopairs').setup()
 require("dressing").setup()
 require("scrollbar").setup()
@@ -157,11 +168,14 @@ require("neo-tree").setup({
         },
     },
 })
+
 require('neoscroll').setup({
     easing_function = "quadratic"
 })
 
--- ILLUMINATE --
+require('nvim_comment').setup({comment_empty = false})
+
+-- ILLUMINATE
 require('illuminate').configure()
 -- change the highlight style
 vim.api.nvim_set_hl(0, "IlluminatedWordText", { link = "Visual" })

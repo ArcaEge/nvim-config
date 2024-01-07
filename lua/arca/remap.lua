@@ -4,27 +4,27 @@ vim.keymap.set("n", "<leader><leader>", vim.cmd.WhichKey)
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
 -- Barbar
-vim.keymap.set("n", "<A-h>", vim.cmd.BufferPrevious)
-vim.keymap.set("n", "<A-l>", vim.cmd.BufferNext)
-vim.keymap.set("n", "<A-H>", vim.cmd.BufferMovePrevious)
-vim.keymap.set("n", "<A-L>", vim.cmd.BufferMoveNext)
+vim.keymap.set({"n", "t"}, "<A-h>", vim.cmd.BufferPrevious)
+vim.keymap.set({"n", "t"}, "<A-l>", vim.cmd.BufferNext)
+vim.keymap.set({"n", "t"}, "<A-H>", vim.cmd.BufferMovePrevious)
+vim.keymap.set({"n", "t"}, "<A-L>", vim.cmd.BufferMoveNext)
 
-local map = vim.api.nvim_set_keymap
+local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
-map('n', '<A-1>', '<Cmd>BufferGoto 1<CR>', opts)
-map('n', '<A-2>', '<Cmd>BufferGoto 2<CR>', opts)
-map('n', '<A-3>', '<Cmd>BufferGoto 3<CR>', opts)
-map('n', '<A-4>', '<Cmd>BufferGoto 4<CR>', opts)
-map('n', '<A-5>', '<Cmd>BufferGoto 5<CR>', opts)
-map('n', '<A-6>', '<Cmd>BufferGoto 6<CR>', opts)
-map('n', '<A-7>', '<Cmd>BufferGoto 7<CR>', opts)
-map('n', '<A-8>', '<Cmd>BufferGoto 8<CR>', opts)
-map('n', '<A-9>', '<Cmd>BufferGoto 9<CR>', opts)
-map('n', '<A-0>', '<Cmd>BufferLast<CR>', opts)
+map({"n", "t"}, '<A-1>', '<Cmd>BufferGoto 1<CR>', opts)
+map({"n", "t"}, '<A-2>', '<Cmd>BufferGoto 2<CR>', opts)
+map({"n", "t"}, '<A-3>', '<Cmd>BufferGoto 3<CR>', opts)
+map({"n", "t"}, '<A-4>', '<Cmd>BufferGoto 4<CR>', opts)
+map({"n", "t"}, '<A-5>', '<Cmd>BufferGoto 5<CR>', opts)
+map({"n", "t"}, '<A-6>', '<Cmd>BufferGoto 6<CR>', opts)
+map({"n", "t"}, '<A-7>', '<Cmd>BufferGoto 7<CR>', opts)
+map({"n", "t"}, '<A-8>', '<Cmd>BufferGoto 8<CR>', opts)
+map({"n", "t"}, '<A-9>', '<Cmd>BufferGoto 9<CR>', opts)
+map({"n", "t"}, '<A-0>', '<Cmd>BufferLast<CR>', opts)
 
-map('n', '<A-p>', '<Cmd>BufferPin<CR>', opts)
-map('n', '<A-c>', '<Cmd>BufferClose<CR>', opts)
-map('n', '<C-p>', '<Cmd>BufferPick<CR>', opts)
+map({"n", "t"}, '<A-p>', '<Cmd>BufferPin<CR>', opts)
+map({"n", "t"}, '<A-c>', '<Cmd>BufferClose<CR>', opts)
+map({"n", "t"}, '<C-p>', '<Cmd>BufferPick<CR>', opts)
 
 
 -- Move lines around when highlighted
@@ -73,3 +73,33 @@ vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
 
 -- NeoTree toggle
 vim.keymap.set("n", "\\", function() vim.cmd.Neotree('toggle') end)
+
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    -- Enable completion triggered by <c-x><c-o>
+    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+    -- Buffer local mappings.
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    local opts = { buffer = ev.buf }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wl', function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, opts)
+    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', '<space>fo', function()
+      vim.lsp.buf.format { async = true }
+    end, opts)
+  end,
+})
